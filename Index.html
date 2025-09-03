@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Teachers' Day in Advance</title>
+<style>
+:root{
+  --bg1:#071428; --bg2:#0b2540; --glow-cyan:#31f7ff; --glow-pink:#ff66b2;
+  --radius:14px; --font:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:var(--font);color:#f6f7fb;}
+body{display:flex;align-items:flex-start;justify-content:center;padding:36px 18px;}
+
+.wrap{
+  width:100%;max-width:1200px;border-radius:18px;overflow:hidden;
+  background:rgba(7,20,40,0.9); box-shadow:0 30px 100px rgba(0,0,0,0.6);
+  display:flex; flex-direction:column;
+}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;}
+.brand{display:flex;align-items:center;gap:14px;}
+.logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--glow-pink),var(--glow-cyan));display:grid;place-items:center;font-weight:800;color:#041423;}
+h1{margin:0;font-size:clamp(18px,2.8vw,28px);background:linear-gradient(90deg,var(--glow-cyan),var(--glow-pink));-webkit-background-clip:text;color:transparent;letter-spacing:0.2px;}
+.meta{color:rgba(246,247,251,0.85); font-size:0.95rem}
+
+.content{
+  display:flex;
+  flex-direction:column; 
+  gap:22px;
+  padding:18px 28px 36px;
+}
+
+.photos{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.card{position:relative;border-radius:var(--radius);overflow:hidden;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12)); 
+  box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+  transform-origin:center; transition: transform 450ms cubic-bezier(.2,.9,.2,1), box-shadow 300ms;
+}
+.card:hover{ transform: translateY(-10px) scale(1.05); box-shadow: 0 32px 70px rgba(0,0,0,0.7); }
+.card img{width:100%;height:280px;object-fit:cover;display:block; transition: transform 600ms ease;}
+.card:hover img{ transform: scale(1.08); }
+
+.label{position:absolute; left:12px; right:12px; bottom:12px; padding:12px 16px; border-radius:12px;background: linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2)); display:flex; gap:10px; align-items:center; font-weight:700; color:#fff;text-shadow:0 6px 18px rgba(0,0,0,0.6);}
+.label .emoji{font-size:1.3rem; margin-right:6px; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.4));}
+
+.panel{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); display:flex;flex-direction:column; gap:12px; margin-top:20px;}
+.panel .title{font-weight:900;color:var(--glow-cyan); font-size:0.98rem}
+.countdown{display:flex;gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-top:10px}
+.countbox{flex:1; min-width:84px; background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:12px; padding:12px; text-align:center; box-shadow:0 10px 28px rgba(0,0,0,0.5)}
+.countbox .num{font-weight:900; font-size:1.5rem; color:var(--glow-cyan); text-shadow:0 6px 20px rgba(49,247,255,0.05)}
+.countbox .lbl{font-size:0.78rem; color:rgba(255,255,255,0.9); margin-top:8px}
+.smallmuted{font-size:0.9rem; color:rgba(255,255,255,0.86)}
+
+.actions{display:flex;flex-direction:row; gap:6px; margin-top:8px; flex-wrap:wrap;}
+.btn{display:inline-flex; align-items:center; gap:4px; justify-content:center; padding:6px 10px; border-radius:6px; border:none; cursor:pointer; font-weight:600; font-size:0.75rem; background: linear-gradient(90deg,var(--glow-cyan),var(--glow-pink)); color:#041423; box-shadow:0 4px 12px rgba(49,247,255,0.06); transition: transform .18s ease; min-width:70px;}
+.btn:hover{ transform: translateY(-3px); box-shadow:0 16px 32px rgba(0,0,0,0.55); }
+.btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--glow-pink); box-shadow:none }
+
+.note{font-size:0.85rem;color:rgba(255,255,255,0.7);margin-bottom:6px;font-style:italic;}
+
+#quoteDisplay{opacity:0; transition: opacity 0.6s ease, transform 0.6s ease; transform: translateY(12px); font-weight:700; font-size:0.9rem; color:var(--glow-cyan); min-height:40px;}
+#quoteDisplay.show{opacity:1; transform: translateY(0);}
+
+/* Modal Styles */
+.modalOverlay{
+  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000;
+}
+.modal{
+  background:linear-gradient(180deg,#0b2540,#071428); padding:28px 36px; border-radius:16px; text-align:center; color:#fff; max-width:400px; width:90%; box-shadow:0 20px 80px rgba(0,0,0,0.7);
+}
+.modal h2{
+  margin-bottom:16px; font-size:1.4rem; background:linear-gradient(90deg,var(--glow-cyan),var(--glow-pink)); -webkit-background-clip:text; color:transparent;
+}
+.modal button{
+  margin-top:12px; padding:6px 16px; border:none; border-radius:12px; background:linear-gradient(90deg,var(--glow-cyan),var(--glow-pink)); color:#041423; cursor:pointer; font-weight:600;
+}
+
+/* Poem Styles */
+.poemContent{
+  font-weight:700; font-size:0.9rem; line-height:1.4rem; color:#ff66b2; text-align:center; letter-spacing:0.5px; 
+  background: linear-gradient(90deg, #31f7ff, #ff66b2); -webkit-background-clip: text; color: transparent;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">AT</div>
+      <div>
+        <h1>🌸 Happy Teachers' Day in Advance</h1>
+        <div class="meta">From Adarsh Tiwari — celebrating the teachers who shape us</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Photos -->
+    <section>
+      <div class="photos">
+        <figure class="card"><img src="images/teacher1.png" alt="Teacher 1"><figcaption class="label"><span class="emoji">🌟</span>"You plant the seeds of curiosity."</figcaption></figure>
+        <figure class="card"><img src="images/teacher2.png" alt="Teacher 2"><figcaption class="label"><span class="emoji">💖</span>"You teach with love and patience."</figcaption></figure>
+        <figure class="card"><img src="images/teacher3.png" alt="Teacher 3"><figcaption class="label"><span class="emoji">🌈</span>"You shape futures with care."</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Countdown & Quotes & Poem -->
+    <aside class="panel">
+      <div class="title">Countdown to 5 September 2025 (00:00 IST)</div>
+      <div class="countdown">
+        <div class="countbox"><div class="num" id="days">00</div><div class="lbl">Days</div></div>
+        <div class="countbox"><div class="num" id="hours">00</div><div class="lbl">Hours</div></div>
+        <div class="countbox"><div class="num" id="minutes">00</div><div class="lbl">Minutes</div></div>
+        <div class="countbox"><div class="num" id="seconds">00</div><div class="lbl">Seconds</div></div>
+      </div>
+      <div id="remaining" class="smallmuted">-- days • --:--:-- remaining</div>
+
+      <div class="note">Click a quote button to display a special message:</div>
+      <div class="actions">
+        <button class="btn quote-btn" data-line="Teachers plant seeds of curiosity and growth.">Quote 1 🌟</button>
+        <button class="btn quote-btn" data-line="Your patience and guidance shapes our dreams.">Quote 2 💖</button>
+        <button class="btn quote-btn" data-line="You light the spark of learning in every heart.">Quote 3 🌈</button>
+      </div>
+      <div id="quoteDisplay"></div>
+
+      <!-- Poem Button -->
+      <div class="note" style="margin-top:16px;">Click the button to read a poem for teachers:</div>
+      <button class="btn" onclick="openPoem()">Read Poem 📖</button>
+    </aside>
+  </div>
+
+  <footer>Made with ❤ for Teachers — Adarsh Tiwari</footer>
+</div>
+
+<!-- Initial Modal -->
+<div class="modalOverlay" id="initialModal">
+  <div class="modal">
+    <h2>Happy Teachers' Day in Advance From Adarsh Tiwari</h2>
+    <button onclick="closeInitialModal()">Open</button>
+  </div>
+</div>
+
+<!-- Poem Modal -->
+<div class="modalOverlay" id="poemModal" style="display:none;">
+  <div class="modal">
+    <h2>Poem for Teachers</h2>
+    <p class="poemContent">
+      A guiding hand, a patient heart,<br>
+      You inspire minds, a work of art.<br>
+      Through every lesson, love you impart,<br>
+      Lighting the path, a shining start.
+    </p>
+    <button onclick="closePoem()">Close</button>
+  </div>
+</div>
+
+<script>
+// Close Initial Modal
+function closeInitialModal(){ document.getElementById('initialModal').style.display='none'; }
+
+// Countdown
+const TARGET = new Date(Date.UTC(2025,8,4,18,30,0));
+const elDays=document.getElementById('days'), elHours=document.getElementById('hours'), elMins=document.getElementById('minutes'), elSecs=document.getElementById('seconds'), elRemaining=document.getElementById('remaining');
+function pad(n){return String(n).padStart(2,'0');}
+function updateCountdown(){
+  const diff = TARGET - new Date();
+  if(diff<=0){ elDays.textContent='00'; elHours.textContent='00'; elMins.textContent='00'; elSecs.textContent='00'; elRemaining.textContent='Unlocked — surprise available now'; return;}
+  const s=Math.floor(diff/1000), days=Math.floor(s/86400), hours=Math.floor((s%86400)/3600), mins=Math.floor((s%3600)/60), secs=s%60;
+  elDays.textContent=pad(days); elHours.textContent=pad(hours); elMins.textContent=pad(mins); elSecs.textContent=pad(secs);
+  elRemaining.textContent=`${days} days • ${pad(hours)}:${pad(mins)}:${pad(secs)} remaining`;
+}
+setInterval(updateCountdown,1000); updateCountdown();
+
+// Quote buttons
+const quoteBtns = document.querySelectorAll('.quote-btn');
+const quoteDisplay = document.getElementById('quoteDisplay');
+quoteBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const text = btn.dataset.line;
+    typeWriterEffect(quoteDisplay, text);
+  });
+});
+function typeWriterEffect(el, text){
+  el.textContent = '';
+  el.classList.remove('show');
+  let idx = 0;
+  const timer = setInterval(()=>{
+    el.textContent = text.slice(0, idx);
+    idx++;
+    if(idx > text.length){
+      clearInterval(timer);
+      el.classList.add('show');
+    }
+  }, 25);
+}
+
+// Poem Modal
+function openPoem(){ document.getElementById('poemModal').style.display='flex'; }
+function closePoem(){ document.getElementById('poemModal').style.display='none'; }
+</script>
+</body>
+</html>
+
